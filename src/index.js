@@ -1,5 +1,6 @@
 const Device = require('@/lib/Device.js')
 const Scene = require('@/lib/Scene.js')
+const Dragger = require('@/lib/Dragger.js')
 
 function Pro(setting) {
     this.xrot = 0;
@@ -12,6 +13,7 @@ function Pro(setting) {
 Pro.prototype = {
     init(setting) {
         this.$setting = setting;
+        var that = this;
 
         if(setting.scene) {
             this.$scene = new Scene(setting.scene);
@@ -25,20 +27,39 @@ Pro.prototype = {
                     B_beta = revent.R_Y,
                     Y_gamma = revent.R_z;
 
-                if(setting.scene) {
-                    if(setting.scene.type == 'css') {
-                        this.$scene.driveCSS3D({
-                            x: revent.R_X,
-                            y: revent.R_Y,
-                            z: revent.R_Z
+                this.update({
+                    x: revent.R_X,
+                    y: revent.R_Y,
+                    z: revent.R_Z
+                })
+            }.bind(this), true);
+
+            if (this.$setting.mode === 'drag') {
+                new Dragger({
+                    handler: function() {
+                        that.update({
+                            x: this.xr,
+                            y: -this.yr,
+                            z: 0
                         })
                     }
-                }
-            }.bind(this), true);
+                })
+            }
         } else {
             console.error('Your Browser can\'t call the Scener')
         }
     },
+    update(obj) {
+        if(this.$setting.scene) {
+            if(this.$setting.scene.type == 'css') {
+                this.$scene.driveCSS3D({
+                    x: obj.x,
+                    y: obj.y,
+                    z: obj.z
+                })
+            }
+        }
+    }
 };
 
 module.exports = Pro

@@ -11142,6 +11142,7 @@ module.exports = g;
 
 const Device = __webpack_require__(/*! @/lib/Device.js */ "./src/lib/Device.js")
 const Scene = __webpack_require__(/*! @/lib/Scene.js */ "./src/lib/Scene.js")
+const Dragger = __webpack_require__(/*! @/lib/Dragger.js */ "./src/lib/Dragger.js")
 
 function Pro(setting) {
     this.xrot = 0;
@@ -11154,6 +11155,7 @@ function Pro(setting) {
 Pro.prototype = {
     init(setting) {
         this.$setting = setting;
+        var that = this;
 
         if(setting.scene) {
             this.$scene = new Scene(setting.scene);
@@ -11167,20 +11169,39 @@ Pro.prototype = {
                     B_beta = revent.R_Y,
                     Y_gamma = revent.R_z;
 
-                if(setting.scene) {
-                    if(setting.scene.type == 'css') {
-                        this.$scene.driveCSS3D({
-                            x: revent.R_X,
-                            y: revent.R_Y,
-                            z: revent.R_Z
+                this.update({
+                    x: revent.R_X,
+                    y: revent.R_Y,
+                    z: revent.R_Z
+                })
+            }.bind(this), true);
+
+            if (this.$setting.mode === 'drag') {
+                new Dragger({
+                    handler: function() {
+                        that.update({
+                            x: this.xr,
+                            y: -this.yr,
+                            z: 0
                         })
                     }
-                }
-            }.bind(this), true);
+                })
+            }
         } else {
             console.error('Your Browser can\'t call the Scener')
         }
     },
+    update(obj) {
+        if(this.$setting.scene) {
+            if(this.$setting.scene.type == 'css') {
+                this.$scene.driveCSS3D({
+                    x: obj.x,
+                    y: obj.y,
+                    z: obj.z
+                })
+            }
+        }
+    }
 };
 
 module.exports = Pro
@@ -11220,6 +11241,71 @@ Device.prototype = {
 };
 
 module.exports = Device
+
+
+/***/ }),
+
+/***/ "./src/lib/Dragger.js":
+/*!****************************!*\
+  !*** ./src/lib/Dragger.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function Dragger(obj) {
+    this.init(obj);
+}
+
+Dragger.prototype = {
+    init(obj) {
+        this.xr = 0;
+        this.yr = 0;
+        this.$setting = obj;
+
+        var that = this;
+
+        if('ontouched' in document) {
+            this.initListener('touch');
+        } else {
+            this.initListener('mouse');
+        }
+    },
+    initListener(eventType) {
+        var eventArr = ['ontouchstart', 'ontouchmove', 'ontouchend'],
+            that = this;
+        if(eventType === 'mouse') {
+            eventArr = ['onmousedown', 'onmousemove', 'onmouseup'];
+        };
+
+        document[eventArr[0]] = function(event) {
+            event.preventDefault();
+            var ev = eventType === 'touch' ? event.touches[0] : event;
+
+            var disX = ev.clientX;
+            var disY = ev.clientY;
+
+            document[eventArr[1]] = function(event) {
+                event.preventDefault();
+                var ev = eventType === 'touch' ? event.touches[0] : event;
+
+                var x = ev.clientY - disY,
+                    y = ev.clientX - disX;
+
+                that.xr = x / 2;
+                that.yr = y / 2;
+
+                that.$setting.handler && that.$setting.handler.call(that);
+            };
+            document[eventArr[2]] = function() {
+                document[eventArr[1]] = null;
+                document[eventArr[2]] = null;
+            };
+            return false;
+        };
+    }
+};
+
+module.exports = Dragger;
 
 
 /***/ }),
