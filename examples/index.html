@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>标题</title>
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+
+	<!-- <script type="text/javascript" src="./js/vue.min.js"></script>
+	<script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script> -->
+    <script type="text/javascript" src="../dist/procupine.js"></script>
+</head>
+<body>
+	<div id="main_con">
+
+	</div>
+
+    <script type="text/javascript">
+		var chartlet = [
+			'bathRoom', 'bedRoom', 'kidRoom', 'kitchen', 'livingRoom', 'Mars', 'secondBedroom', 'theBridge'
+		],
+		faces = ['posx', 'negx', 'posy', 'negy', 'posz', 'negz'];
+
+		var sel = Math.round(Math.random() * 7),
+			chartletArr = faces.map(function(item) {
+			return './images/' + chartlet[sel] + '/' + item + '.jpg'
+		});
+
+		new Pro({
+			scene: {
+				type: 'css',
+				chartlet: chartletArr
+			},
+			handler: function(obj) {
+				// console.log(obj)
+			}
+		})
+    </script>
+</body>
+</html>
