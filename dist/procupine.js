@@ -11147,6 +11147,7 @@ const Dragger = __webpack_require__(/*! @/lib/Dragger.js */ "./src/lib/Dragger.j
 function Pro(setting) {
     this.xrot = 0;
     this.yrot = 0;
+    this.zrot = 0;
 
     this.init(setting);
     console.log('Pro init');
@@ -11192,15 +11193,25 @@ Pro.prototype = {
         }
     },
     update(obj) {
+        this.xrot = obj.x;
+        this.yrot = obj.y;
+        this.zrot = obj.z;
+
         if(this.$setting.scene) {
             if(this.$setting.scene.type == 'css') {
                 this.$scene.driveCSS3D({
                     x: obj.x,
                     y: obj.y,
                     z: obj.z
-                })
+                });
             }
-        }
+        };
+
+        this.$setting.handler && this.$setting.handler({
+            x: this.xrot,
+            y: this.yrot,
+            z: this.zrot
+        });
     }
 };
 
@@ -11437,7 +11448,7 @@ Scene.prototype = {
                         {
                             tag: 'div',
                             attr: {
-                                style: 'position:relative; left:0; right:0; top:0; bottom:0; transform-style:preserve-3d; width:100%; height:100%; transform:translate3d(50%,50%,' + VIEW_RANGE + ');',
+                                style: 'position:relative; left:0; right:0; top:0; bottom:0; transform-style:preserve-3d; width:100%; height:100%; transform:translate3d(50%,50%,' + VIEW_RANGE + ')',
                                 class: 'css3__scene--box'
                             },
                             children: [

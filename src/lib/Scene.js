@@ -49,7 +49,7 @@ Scene.prototype = {
                         {
                             tag: 'div',
                             attr: {
-                                style: 'position:relative; left:0; right:0; top:0; bottom:0; transform-style:preserve-3d; width:100%; height:100%; transform:translate3d(50%,50%,' + VIEW_RANGE + ');',
+                                style: 'position:relative; left:0; right:0; top:0; bottom:0; transform-style:preserve-3d; width:100%; height:100%; transform:translate3d(50%,50%,' + VIEW_RANGE + ')',
                                 class: 'css3__scene--box'
                             },
                             children: [

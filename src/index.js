@@ -5,6 +5,7 @@ const Dragger = require('@/lib/Dragger.js')
 function Pro(setting) {
     this.xrot = 0;
     this.yrot = 0;
+    this.zrot = 0;
 
     this.init(setting);
     console.log('Pro init');
@@ -50,15 +51,25 @@ Pro.prototype = {
         }
     },
     update(obj) {
+        this.xrot = obj.x;
+        this.yrot = obj.y;
+        this.zrot = obj.z;
+
         if(this.$setting.scene) {
             if(this.$setting.scene.type == 'css') {
                 this.$scene.driveCSS3D({
                     x: obj.x,
                     y: obj.y,
                     z: obj.z
-                })
+                });
             }
-        }
+        };
+
+        this.$setting.handler && this.$setting.handler({
+            x: this.xrot,
+            y: this.yrot,
+            z: this.zrot
+        });
     }
 };
 
