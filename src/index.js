@@ -39,8 +39,8 @@ Pro.prototype = {
                 new Dragger({
                     handler: function() {
                         that.update({
-                            x: this.xr,
-                            y: -this.yr,
+                            x: +this.xr_sum,
+                            y: -this.yr_sum,
                             z: 0
                         })
                     }

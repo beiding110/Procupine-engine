@@ -21,10 +21,10 @@
 		],
 		faces = ['posx', 'negx', 'posy', 'negy', 'posz', 'negz'];
 
-		var sel = Math.round(Math.random() * 7),
+		var sel = Math.round(Math.random() * (chartlet.length - 1)),
 			chartletArr = faces.map(function(item) {
-			return './images/' + chartlet[sel] + '/' + item + '.jpg'
-		});
+				return './images/' + chartlet[sel] + '/' + item + '.jpg'
+			});
 
 		new Pro({
 			scene: {
