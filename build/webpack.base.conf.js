@@ -24,7 +24,12 @@ module.exports = {
         umdNamedDefine: true,
     },
     module: {
-
+        rules: [
+          {
+            test: /\.js$/,
+            loader: 'babel-loader',
+          },
+        ]
     },
     resolve: {
         alias: {
