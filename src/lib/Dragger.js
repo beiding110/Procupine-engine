@@ -13,6 +13,8 @@ Dragger.prototype = {
         this.last_x = 0;
         this.last_y = 0;
 
+        this.eventType = '';
+
         var that = this;
 
         if('ontouched' in document) {
@@ -22,6 +24,8 @@ Dragger.prototype = {
         }
     },
     initListener(eventType) {
+        this.eventType = eventType;
+
         var eventArr = ['ontouchstart', 'ontouchmove', 'ontouchend'],
             that = this;
         if(eventType === 'mouse') {
@@ -56,10 +60,20 @@ Dragger.prototype = {
                 that.last_x = that.xr_sum;
                 that.last_y = that.yr_sum;
 
-                console.log(this.last_x, this.last_y)
+                console.log(that.last_x, that.last_y)
             };
             return false;
         };
+    },
+    destroy() {
+        var switchObj = {
+            touch: ['ontouchstart', 'ontouchmove', 'ontouchend'],
+            mouse: ['onmousedown', 'onmousemove', 'onmouseup']
+        };
+
+        switchObj[this.eventType].forEach(item => {
+            document[item] = null;
+        });
     }
 };
 
