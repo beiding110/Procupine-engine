@@ -17,7 +17,7 @@ Dragger.prototype = {
 
         var that = this;
 
-        if('ontouched' in document) {
+        if('ontouchstart' in document) {
             this.initListener('touch');
         } else {
             this.initListener('mouse');
