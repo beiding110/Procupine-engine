@@ -72,7 +72,7 @@ Pro.prototype = {
             orientation() {
                 if (!window.DeviceOrientationEvent) {
                     console.error('您的浏览器不支持相关传感器的调用，已为您打开拖拽模式');
-                    this.switchModel('drag');
+                    that.switchModel('drag');
                     failed && failed();
                     return;
                 };
@@ -84,7 +84,7 @@ Pro.prototype = {
                     B_beta = revent.R_Y,
                     Y_gamma = revent.R_z;
 
-                    this.update({
+                    that.update({
                         x: revent.R_X,
                         y: revent.R_Y,
                         z: revent.R_Z
@@ -100,14 +100,14 @@ Pro.prototype = {
                     B_beta = revent.R_Y,
                     Y_gamma = revent.R_z;
 
-                    this.update({
+                    that.update({
                         x: revent.R_X,
                         y: revent.R_Y,
                         z: revent.R_Z
                     });
 
                     revent = null;
-                }.bind(that);
+                };
 
                 that.eventer = {
                     destroy() {
