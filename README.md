@@ -10,6 +10,13 @@ procupine-engine是一个由纯js编写的，基于移动端 `角度传感器（
 
 相比于毕设作品，本次使用webpack工具重构的procupine-engine虽然在体积上有所增加，但是，由于计算出了通用算法相比于前者在兼容性上有质的飞跃。
 
+### 示例
+
+[全景vr房间展示](https://beiding110.github.io/Procupine-engine/examples/rooms/)
+
+[全景vr请帖](https://beiding110.github.io/Procupine-engine/examples/invite/)
+
+
 ### 使用说明
 
 页面中需要实例化Pro类：
