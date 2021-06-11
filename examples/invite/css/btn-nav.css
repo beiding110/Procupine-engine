@@ -1,0 +1,15 @@
+.btn-nav_container{position:fixed; left:0; right:0; bottom:0; z-index:999; overflow:hidden; padding:0 20px; background-color:rgba(255,255,255,.1); height:40px;}
+.btn-nav_container{padding-bottom:constant(safe-area-inset-bottom); padding-bottom:env(safe-area-inset-bottom);}
+
+.btn-nav_btns{display:inline-block;}
+.btn-nav_btns:active{background-color:rgba(255,255,255,.1);}
+.btn-nav_btns:before{color:white; font-size:40px; line-height:1em; display:block; opacity:.5;}
+.btn-nav_btns:active:before{opacity:1;}
+.btn-nav_btns.btn-prev{float:left; background:url(../assets/icon/arrow-l.png);}
+.btn-nav_btns.btn-next{float:right; background:url(../assets/icon/arrow-r.png);}
+.btn-nav_btns.btn-prev, .btn-nav_btns.btn-next{width:30px; height:30px; background-size:cover; margin-top:5px;}
+
+.btn-nav_item-list{position:absolute; left:50px; right:50px; text-align:center; line-height:40px;}
+
+.btn-nav_items{width:20px; height:20px; background:white; border-radius:50%; display:inline-block; margin:0 10px; opacity:.5; vertical-align:middle;}
+.btn-nav_items.active{opacity:1;}

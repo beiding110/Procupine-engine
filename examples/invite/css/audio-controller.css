@@ -1,0 +1,2 @@
+.audio-controller-btn{width:30px; height:30px; position:fixed; right:10px; top:10px; z-index:999; background:url(../assets/icon/music.png) no-repeat; background-size:cover;}
+.audio-controller-btn.stop:after{content:''; position:absolute; width:40px; height:3px; background:black; left:50%; top:50%; transform:translate(-50%,-50%) rotate(45deg);}

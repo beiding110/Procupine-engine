@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>豪&月</title>
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
+	<link rel="stylesheet" href="./css/audio-controller.css"></link>
+	<link rel="stylesheet" href="./css/btn-nav.css"></link>
+	<link rel="stylesheet" href="./css/btn-shift.css"></link>
+	<link rel="stylesheet" href="./css/btn-view.css"></link>
+	<link rel="stylesheet" href="./css/pages.css"></link>
+	<link rel="stylesheet" href="./css/message-box.css"></link>
+</head>
+<body>
+
+	<div class="page page-cover" id="info">
+		<div class="con-title">
+			<div class="title">诚挚邀请</div>
+			<div class="title-sub b">新郎 && 新娘</div>
+			<div class="title-sub">2020.10.18 11:58</div>
+		</div>
+
+		<div class="card">
+			<img src="./assets/silk.png" class="title-img"/>
+			<div class="title">
+				<p>这是地点</p>
+				<p>这是详细地点</p>
+			</div>
+			<img src="./images/location.jpg" id="btn-open_img"/>
+		</div>
+	</div>
+
+	<div id="ios-apply" class="first-view">
+		<div class="top-cover">
+			<img class="china-jie" src="./assets/china-jie.png"/>
+		</div>
+
+		<div class="btn" onclick="iosApplyHandler()">
+			<img src="./assets/c-xi.png"/>
+			<div class="cover-title main">点我，ლ(°◕‵ƹ′◕ლ)</div>
+			<div class="cover-title sub">我需要你的授权，来为你展示我的请帖艺术~</div>
+		</div>
+	</div>
+
+	<div id="android-apply" class="first-view">
+		<div class="top-cover">
+			<img class="china-jie" src="./assets/china-jie.png"/>
+		</div>
+
+		<div class="btn" onclick="fadeout('#android-apply', 'androidGet')">
+			<img src="./assets/c-xi.png"/>
+			<div class="cover-title main">点我，ლ(°◕‵ƹ′◕ლ)</div>
+			<div class="cover-title sub">开始向您展示我的请帖~</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+	<script type="text/javascript" src="./js/procupine.js"></script>
+	<script type="text/javascript" src="./js/audio-controller.js"></script>
+	<script type="text/javascript" src="./js/btn-nav.js"></script>
+	<script type="text/javascript" src="./js/btn-shift.js"></script>
+	<script type="text/javascript" src="./js/btn-view.js"></script>
+	<script type="text/javascript" src="./js/preload-img.js"></script>
+	<script type="text/javascript" src="./js/message-box.js"></script>
+	<script type="text/javascript" src="./js/checkDevice.js"></script>
+
+	<script type="text/javascript" src="./js/index.js"></script>
+
+	<script type="text/javascript">
+		function iosApplyHandler() {
+			if(typeof DeviceMotionEvent.requestPermission === 'function') {
+				DeviceMotionEvent.requestPermission().then(function (state) {
+					fadeout('#ios-apply', 'iosGet');
+
+					if ('granted' === state) {
+				    	init();
+				    } else {
+				    	alert('ε=(´ο｀*)))唉~只好给你看拖拽版的啦');
+
+				    	init('drag');
+				    };
+				}).catch(function(err){
+				    alert('error: ' + err);
+				});
+			} else {
+				fadeout('#ios-apply', 'iosGet');
+				init();
+			};
+		};
+
+		function fadeout(el, tag) {
+			window.localStorage[tag] = 1;
+
+			document.querySelector(el).style.opacity = 0;
+			document.querySelector(el).style.top = '50%';
+
+			setTimeout(function() {
+				document.querySelector(el).style.display = 'none';
+			}, 300);
+		}
+
+		if(checkDevice.ios()) {
+			// if(window.localStorage.iosGet) {
+			// 	init();
+			// } else {
+				document.querySelector('#ios-apply').style.display = 'block';
+			// }
+
+		} else if(checkDevice.android()) {
+			if(!window.localStorage.androidGet) {
+				document.querySelector('#android-apply').style.display = 'block';
+			};
+
+			init();
+		} else {
+			init('drag');
+		};
+	</script>
+</body>
+</html>

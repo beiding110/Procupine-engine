@@ -1,0 +1,2 @@
+.message-box{font-size:12px; padding:.5em; background:rgba(0,0,0,.6); box-shadow:0 0 4px black; color:white; position:fixed; left:50%; bottom:20%; transform:translate(-50%,-50%); z-index:1000; transition:all .3s;}
+.message-box.hide{opacity:0;}
