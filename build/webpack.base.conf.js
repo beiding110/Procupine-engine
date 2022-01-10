@@ -1,5 +1,3 @@
-require('babel-polyfill')
-
 var path = require('path'),
     libraryName = 'Pro',
     outputFileName = 'procupine',
@@ -13,7 +11,7 @@ function resolve (dir) {
 
 module.exports = {
     context: path.resolve(__dirname, '../'),
-    entry: ["babel-polyfill", './src/index.js'],
+    entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: process.env.NODE_ENV === 'production'
