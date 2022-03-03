@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .target{
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    距离
+    <div class="console"></div>
+
+    <div class="target"></div>
+    
+    <script>
+        // 打印函数
+        function print(str) {
+            document.querySelector('.console').innerHTML = str;
+        }
+
+        // 模拟推/拉风箱
+        function scaleTarget(num) {
+            var size = 1 / (num + 1);
+
+            document.querySelector('.target').style.transform = `translate(-50%, -50%) scale(${size})`
+        }
+
+        function MovingObj() {
+            this.v0 = 0;
+
+            this.s0 = 0;
+            this.a0 = 0;
+
+            this.org = [];
+            this.shakeRange = [];
+
+            this.init();
+        }
+
+        MovingObj.prototype = {
+            init: function() {
+                
+            },
+            move(a, t) {
+                if (this.storeInitData(a)) {
+                    return {};
+                }
+
+                var delta_t = t / 1000,
+                    a = this.getA(a),  //Math.abs(Math.abs(a) - Math.abs(this.a0)) < .01 ? 0 : a,
+                    v0 = this.v0;
+
+                delta_s = (v0 * delta_t) + (0.5 * a * delta_t * delta_t);
+                this.s0 += delta_s;
+                
+                this.v0 = v0 + (a * delta_t);
+
+                // print(`
+                //     ${a}
+                // `);
+
+                return {
+                    v: this.v0,
+                    s: this.s0,
+                };
+            },
+            // setDefaultA: function(a) {
+            //     if (!this.a0) {
+            //         this.a0 = a;
+            //     }
+            // },
+            // 获取与抖动值做差后的加速度a
+            getA: function(a) {
+                var true_a = a - this.a0;
+
+                if (true_a > this.shakeRange[0] && true_a < this.shakeRange[1]) {
+                    return 0;
+                } else {
+                    return true_a;
+                }
+            },
+            // 采集初始值，用来清除抖动
+            storeInitData: function(a) {
+                var cacheLength = 200;
+
+                if (this.org.length < cacheLength) {
+                    this.org.push(a);
+                    return true;
+                }
+                
+                // this.setA0();
+                this.setShakeRange();
+
+                return false;
+            },
+            // setA0: function() {
+            //     if (!this.a0) {
+            //         this.a0 = this.org.reduce((i, sum) => i + sum) / this.org.length;
+            //     }
+
+            //     return this.a0;
+            // },
+            // 设定采集后抖动值的范围
+            setShakeRange: function() {
+                if (!this.shakeRange.length) {
+                    function calc(num) {
+                        var multiple = 100;     //保留小数位数，越大越精确
+
+                        var mm = num * multiple;
+                        return Math.ceil(mm) / multiple;
+                    }
+
+                    var sorted = this.org.sort((item, next) => item - next);
+
+                    this.shakeRange.push(calc(sorted[0]));
+                    this.shakeRange.push(calc(sorted[sorted.length - 1]));
+                }
+
+                return this.shakeRange;
+            }
+
+        }
+
+        var m_x = new MovingObj(),
+            m_y = new MovingObj(),
+            m_z = new MovingObj();
+
+        if (window.DeviceMotionEvent) {
+            // https://developer.mozilla.org/zh-CN/docs/Web/API/DeviceMotionEvent/acceleration
+            window.addEventListener('devicemotion', function(event) {
+                var t = event.interval;
+
+                var move_x = m_x.move(event.acceleration.x, t),
+                    move_y = m_y.move(event.acceleration.y, t)
+                    move_z = m_z.move(event.acceleration.z, t);
+
+                // print(`
+                //     ${m_x.v0}
+                //     <br/>
+                //     ${m_y.v0}
+                //     <br/>
+                //     ${m_z.v0}
+                // `);
+
+                print(`
+                    <br/>
+                    ${m_x.a0}
+                    <br/>
+                    ${m_x.shakeRange}
+                    <br/>
+                    ${event.acceleration.x}
+                    <br/>
+                    ${m_x.getA(event.acceleration.x)}
+                    <br/>
+                    ${move_x.v}
+                `);
+
+                // print(`
+                //     ${m_x.org}
+                // `);
+
+                scaleTarget(m_z.s0)
+            });
+        } else {
+            alert('not support dme')
+        }
+
+    </script>
+</body>
+</html>
