@@ -75,8 +75,8 @@ Pro.prototype = {
                 that.eventer = new Dragger({
                     handler: function () {
                         that.update({
-                            x: +this.xr_sum,
-                            y: -this.yr_sum,
+                            x: +this.xr,
+                            y: -this.yr,
                             z: 0,
                         });
                     },
