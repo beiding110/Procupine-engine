@@ -1,4 +1,5 @@
 const Json2Dom = require('@/lib/Json2Dom.js');
+const { VIEW_RANGE, MARK_DISTANCE } = require('./var.js');
 
 function Marks(obj) {
     this.init(obj);
@@ -21,29 +22,46 @@ Marks.prototype = {
         }
     },
     initCSS3D() {
-        var VIEW_RANGE = '398.135px';
-
         var tree = {
             tag: 'div',
             attr: {
-                style: 'position:fixed; left:0; right:0; top:0; bottom:0; overflow:hidden;',
+                style: `
+                    position: fixed; 
+                    left: 0; 
+                    right: 0; 
+                    top: 0; 
+                    bottom: 0; 
+                    overflow: hidden;
+                `,
                 class: 'css3__marks--con',
             },
             children: [
                 {
                     tag: 'div',
                     attr: {
-                        style: 'transform-style:preserve-3d; perspective:' + VIEW_RANGE + '; width:100%; height:100%;',
+                        style: `
+                            transform-style: preserve-3d; 
+                            perspective: ${VIEW_RANGE}; 
+                            width: 100%; 
+                            height: 100%;
+                        `,
                         class: 'css3__marks--stage',
                     },
                     children: [
                         {
                             tag: 'div',
                             attr: {
-                                style:
-                                    'position:relative; left:0; right:0; top:0; bottom:0; transform-style:preserve-3d; width:100%; height:100%; transform:translate3d(50%,50%,' +
-                                    VIEW_RANGE +
-                                    ')',
+                                style: `
+                                    position: relative; 
+                                    left: 0;
+                                    right: 0;
+                                    top: 0;
+                                    bottom: 0;
+                                    transform-style: preserve-3d;
+                                    width: 100%;
+                                    height: 100%;
+                                    transform: translate3d(50%, 50%, ${VIEW_RANGE});
+                                `,
                                 class: 'css3__marks--box',
                             },
                             children: [],
@@ -56,8 +74,7 @@ Marks.prototype = {
         this.J2D.build(tree);
     },
     markCSS3D(arr) {
-        var FACE_HAFL_WIDTH = 511,
-            MARK_SIZE = '60px';
+        var MARK_SIZE = '60px';
 
         var box = this.$dom.querySelector('.css3__marks--box');
 
@@ -78,7 +95,7 @@ Marks.prototype = {
                 background: rgba(255,255,255,.7); 
                 border-radius: 50%;
                 transform-origin: center center;
-                transform: rotateX(${dx}deg) rotateY(${dy}deg) translate3d(0, 0, -${FACE_HAFL_WIDTH}px);
+                transform: rotateX(${dx}deg) rotateY(${dy}deg) translate3d(0, 0, -${MARK_DISTANCE}px);
             `;
 
             el.addEventListener('click', item.click);
@@ -89,16 +106,16 @@ Marks.prototype = {
     driveCSS3D: function (obj) {
         var R_X = obj.x,
             R_Y = obj.y,
-            R_Z = obj.z;
+            R_Z = obj.z,
+            box = document.querySelector('.css3__marks--box');
 
-        document.querySelector('.css3__marks--box').style.transform =
-            'translate3d(0,0,398.135px) rotateZ(' +
-            R_Z +
-            'deg) rotateX(' +
-            R_X +
-            'deg) rotateY(' +
-            R_Y +
-            'deg) translate3d(50%,50%,0)';
+        box.style.transform = `
+            translate3d(0, 0, ${VIEW_RANGE}) 
+            rotateZ(${R_Z}deg) 
+            rotateX(${R_X}deg) 
+            rotateY(${R_Y}deg) 
+            translate3d(50%, 50%, 0)
+        `;
     },
 };
 
