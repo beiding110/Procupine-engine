@@ -88,11 +88,30 @@ Pro.prototype = {
             },
             orientation() {
                 if (!window.DeviceOrientationEvent) {
-                    console.error('您的浏览器不支持相关传感器的调用，已为您打开拖拽模式');
-                    that.switchModel('drag');
-                    failed && failed();
+                    initDrag();
+                    
                     return;
                 }
+
+                if(typeof DeviceMotionEvent.requestPermission === 'function') {
+                    // 如果是ios，则需要授权
+                    DeviceMotionEvent.requestPermission().then(function (state) {
+                        if ('granted' === state) {
+                            // 用户同意
+                            initOrientation();
+                        } else {
+                            // 用户不同意
+                            initDrag();
+                        };
+                    }).catch(function(err){
+                        alert('error: ' + err);
+
+                        initDrag();
+                    });
+                } else {
+                    // 非iso，正常初始化
+                    initOrientation();
+                };
 
                 function deviceorientationHandler(event) {
                     var revent = new Device(event);
@@ -106,19 +125,30 @@ Pro.prototype = {
                     revent = null;
                 }
 
-                window.addEventListener('deviceorientation', deviceorientationHandler);
+                // 初始化角度传感器
+                function initOrientation() {
+                    window.addEventListener('deviceorientation', deviceorientationHandler);
 
-                that.eventer = {
-                    destroy() {
-                        window.ondeviceorientation = null;
+                    that.eventer = {
+                        destroy() {
+                            window.ondeviceorientation = null;
 
-                        window.removeEventListener('deviceorientation', deviceorientationHandler);
-                    },
-                };
+                            window.removeEventListener('deviceorientation', deviceorientationHandler);
+                        },
+                    };
 
-                that.$setting.mode = 'orientation';
+                    that.$setting.mode = 'orientation';
 
-                success && success();
+                    success && success();
+                }
+
+                // 初始化拖拽
+                function initDrag () {
+                    console.error('您的浏览器不支持相关传感器的调用，已为您打开拖拽模式');
+                    that.switchModel('drag');
+
+                    failed && failed();
+                }
             },
         };
 
