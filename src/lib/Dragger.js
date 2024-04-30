@@ -50,6 +50,10 @@ Dragger.prototype = {
                 event.preventDefault();
                 event.stopPropagation();
 
+                if (![1, 2].includes(that._state)) {
+                    return;
+                }
+
                 var ev = that.eventType === 'touch' ? event.touches[0] : event;
 
                 var deltaX = ev.clientY - startY, // 滑动距离x
@@ -67,6 +71,10 @@ Dragger.prototype = {
             endHandler(event) {
                 event.preventDefault();
                 event.stopPropagation();
+
+                if (that._state !== 2) {
+                    return;
+                }
 
                 last_x = that.xr;
                 last_y = that.yr;
