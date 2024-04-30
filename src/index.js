@@ -1,6 +1,7 @@
-const Device = require('@/lib/Device.js')
-const Scene = require('@/lib/Scene.js')
-const Dragger = require('@/lib/Dragger.js')
+const Device = require('@/lib/Device.js');
+const Scene = require('@/lib/Scene.js');
+const Marks = require('@/lib/Marks');
+const Dragger = require('@/lib/Dragger.js');
 
 function Pro(setting) {
     this.xrot = 0;
@@ -18,55 +19,71 @@ Pro.prototype = {
         this.$setting = setting;
         var that = this;
 
-        if(setting.scene) {
+        if (setting.scene) {
             this.$scene = new Scene(setting.scene);
         }
 
-        if(this.$setting.mode === 'drag') {
+        if (setting.marks) {
+            this.$marks = new Marks(setting.marks);
+        }
+
+        if (this.$setting.mode === 'drag') {
             this.switchModel('drag');
         } else {
             this.switchModel('orientation');
-        };
+        }
     },
     update(obj) {
         this.xrot = obj.x;
         this.yrot = obj.y;
         this.zrot = obj.z;
 
-        if(this.$setting.scene) {
-            if(this.$setting.scene.type == 'css') {
+        if (this.$setting.scene) {
+            if (this.$setting.scene.type == 'css') {
                 this.$scene.driveCSS3D({
                     x: obj.x,
                     y: obj.y,
-                    z: obj.z
+                    z: obj.z,
                 });
             }
-        };
+        }
 
-        this.$setting.handler && this.$setting.handler({
-            x: this.xrot,
-            y: this.yrot,
-            z: this.zrot
-        });
+        if (this.$setting.marks) {
+            this.$marks.driveCSS3D({
+                x: obj.x,
+                y: obj.y,
+                z: obj.z,
+            });
+        }
+
+        this.$setting.handler &&
+            this.$setting.handler({
+                x: this.xrot,
+                y: this.yrot,
+                z: this.zrot,
+            });
     },
     switchModel(type, success, failed) {
         var that = this;
 
-        try{
+        try {
             that.eventer.destroy();
-        } catch(e) {};
+        } catch (e) {}
 
         var switchObj = {
             drag() {
                 that.eventer = new Dragger({
-                    handler: function() {
+                    handler: function () {
                         that.update({
                             x: +this.xr_sum,
                             y: -this.yr_sum,
-                            z: 0
-                        })
-                    }
+                            z: 0,
+                        });
+                    },
                 });
+
+                that.$setting.mode = 'drag';
+
                 success && success();
             },
             orientation() {
@@ -75,35 +92,35 @@ Pro.prototype = {
                     that.switchModel('drag');
                     failed && failed();
                     return;
-                };
+                }
 
                 function deviceorientationHandler(event) {
                     var revent = new Device(event);
 
                     var a_alpha = revent.R_X,
-                    B_beta = revent.R_Y,
-                    Y_gamma = revent.R_z;
+                        B_beta = revent.R_Y,
+                        Y_gamma = revent.R_z;
 
                     that.update({
                         x: revent.R_X,
                         y: revent.R_Y,
-                        z: revent.R_Z
+                        z: revent.R_Z,
                     });
 
                     revent = null;
-                };
+                }
 
-                window.ondeviceorientation = function() {
+                window.ondeviceorientation = function () {
                     var revent = new Device(event);
 
                     var a_alpha = revent.R_X,
-                    B_beta = revent.R_Y,
-                    Y_gamma = revent.R_z;
+                        B_beta = revent.R_Y,
+                        Y_gamma = revent.R_z;
 
                     that.update({
                         x: revent.R_X,
                         y: revent.R_Y,
-                        z: revent.R_Z
+                        z: revent.R_Z,
                     });
 
                     revent = null;
@@ -112,15 +129,17 @@ Pro.prototype = {
                 that.eventer = {
                     destroy() {
                         window.ondeviceorientation = null;
-                    }
+                    },
                 };
 
+                that.$setting.mode = 'orientation';
+
                 success && success();
-            }
+            },
         };
 
         switchObj[type]();
-    }
+    },
 };
 
-module.exports = Pro
+module.exports = Pro;
