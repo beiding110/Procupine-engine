@@ -82,9 +82,9 @@ Dragger.prototype = {
 
         this._handlers = this._handlerBuilder();
 
-        document.addEventListener(eventArr[0], this._handlers.startHandler);
-        document.addEventListener(eventArr[1], this._handlers.moveHandler);
-        document.addEventListener(eventArr[2], this._handlers.endHandler);
+        document.addEventListener(eventArr[0], this._handlers.startHandler, { passive: false });
+        document.addEventListener(eventArr[1], this._handlers.moveHandler, { passive: false });
+        document.addEventListener(eventArr[2], this._handlers.endHandler, { passive: false });
     },
     destroy() {
         var eventArr = this._eventsMap[this.eventType];
