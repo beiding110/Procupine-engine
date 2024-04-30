@@ -98,7 +98,21 @@ Marks.prototype = {
                 transform: rotateX(${dx}deg) rotateY(${dy}deg) translate3d(0, 0, -${MARK_DISTANCE}px);
             `;
 
-            el.addEventListener('click', item.click);
+            // 绑定事件
+            if (item.click) {
+                var eventName = 'click';
+
+                if('ontouchstart' in document) {
+                    eventName = 'touchstart';
+                }
+
+                el.addEventListener(eventName, event => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    item.click(event);
+                });
+            }
 
             box.appendChild(el);
         });
