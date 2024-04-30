@@ -97,10 +97,6 @@ Pro.prototype = {
                 function deviceorientationHandler(event) {
                     var revent = new Device(event);
 
-                    var a_alpha = revent.R_X,
-                        B_beta = revent.R_Y,
-                        Y_gamma = revent.R_z;
-
                     that.update({
                         x: revent.R_X,
                         y: revent.R_Y,
@@ -110,25 +106,13 @@ Pro.prototype = {
                     revent = null;
                 }
 
-                window.ondeviceorientation = function () {
-                    var revent = new Device(event);
-
-                    var a_alpha = revent.R_X,
-                        B_beta = revent.R_Y,
-                        Y_gamma = revent.R_z;
-
-                    that.update({
-                        x: revent.R_X,
-                        y: revent.R_Y,
-                        z: revent.R_Z,
-                    });
-
-                    revent = null;
-                };
+                window.addEventListener('deviceorientation', deviceorientationHandler);
 
                 that.eventer = {
                     destroy() {
                         window.ondeviceorientation = null;
+
+                        window.removeEventListener('deviceorientation', deviceorientationHandler);
                     },
                 };
 

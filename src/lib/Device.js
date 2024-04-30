@@ -1,4 +1,4 @@
-function Device(e) {
+function Device(event) {
     var a_alpha = event.alpha,
         B_beta = event.beta,
         Y_gamma = event.gamma,
